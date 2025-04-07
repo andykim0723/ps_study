@@ -7,6 +7,7 @@ L, N, Q = list(map(int, input().split()))
 board = [list(map(int, input().split())) for _ in range(L)]
 knights = [list(map(int, input().split())) for _ in range(N)]
 
+
 # 로직:
 ## 기사의 형태: (r, c)를 좌측 상단으로 하여 H, W의 직사각형 헝태, 체력 k
 ## 기사 이동: 상하좌우 중 한 칸 움직일 수 있음. 움직인 칸에 다른 기사가 있으면, 그 기사도 같이 밀려남
@@ -69,21 +70,33 @@ def has_wall(knight_id, y2move, x2move):
 
     return False
 
+# def find_knights(knight_id, y2move, x2move):
+#     r, c, h, w, _ = knights[knight_id-1]
+#     r, c = r-1, c-1
+#     knights_found = defaultdict(int)
+#     if x2move == 0: # 상하 이면
+#         vertical_point = r-1 if y2move == -1 else r+h
+#         for i in range(c, c+w):
+#             knights_found[knight_board[vertical_point][i]] += 1
+#
+#     elif y2move == 0: # 좌우 이면
+#         horizontal_point = c-1 if x2move == -1 else c+w
+#         for i in range(r, r+h):
+#             knights_found[knight_board[i][horizontal_point]] += 1
+#
+#     return list(knights_found.keys())
+
 def find_knights(knight_id, y2move, x2move):
     r, c, h, w, _ = knights[knight_id-1]
-    r, c = r-1, c-1
-    knights_found = defaultdict(int)
     if x2move == 0: # 상하 이면
-        vertical_point = r-1 if y2move == -1 else r+h
-        for i in range(c, c+w):
-            knights_found[knight_board[vertical_point][i]] += 1
+        if y2move == 1:
+            check_range = (c)
+    knights_found = []
+    for tmp_k_id, knight in enumerate(knights):
+        if knight_id == tmp_k_id:
+            continue
+        tmp_r, tmp_c, tmp_h, tmp_w, _ = knight
 
-    elif y2move == 0: # 좌우 이면
-        horizontal_point = c-1 if x2move == -1 else c+w
-        for i in range(r, r+h):
-            knights_found[knight_board[i][horizontal_point]] += 1
-
-    return list(knights_found.keys())
 
 
 answer = 0
@@ -104,7 +117,6 @@ for _ in range(Q):
     wall = False
     while Q:
         k_id = Q.popleft()
-
         ## 벽이 있으면, 다음 지시 수행
         if has_wall(k_id, dy, dx):
             wall = True
